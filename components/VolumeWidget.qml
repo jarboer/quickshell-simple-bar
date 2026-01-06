@@ -6,6 +6,10 @@ import ".."
 Text {
     id: volumeWidget
 
+    Layout.preferredWidth: 56
+    Layout.alignment: Qt.AlignRight
+    horizontalAlignment: Text.AlignRight
+
     property int volumeLevel: 0
     property bool volumeMuted: false
     property string audioSink: "speaker"  // speaker, headphone, hdmi, bluetooth
@@ -21,7 +25,7 @@ Text {
         return ""
     }
 
-    text: volumeIcon + " " + volumeLevel + "%"
+    text: volumeIcon + "   " + volumeLevel + "%"
     color: volumeMuted ? Theme.colMuted :
            audioSink === "headphone" ? "#f1fa8c" :
            audioSink === "bluetooth" ? Theme.colBluetooth :

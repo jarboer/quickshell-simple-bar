@@ -6,9 +6,13 @@ import ".."
 Text {
     id: memWidget
 
-    property int memUsage: 0
+    Layout.preferredWidth: 56
+    Layout.alignment: Qt.AlignRight
+    horizontalAlignment: Text.AlignRight
 
-    text: memUsage + "% 󰾆"
+    property string memUsage: " 0"
+
+    text: "󰾆  " + memUsage + "%"
     color: Theme.colMem
     font.pixelSize: Theme.fontSize
     font.family: Theme.fontFamily
@@ -23,7 +27,9 @@ Text {
                 var parts = data.trim().split(/\s+/)
                 var total = parseInt(parts[1]) || 1
                 var used = parseInt(parts[2]) || 0
-                memWidget.memUsage = Math.round(100 * used / total)
+
+                var memVal = Math.round(100 * used / total)
+                memWidget.memUsage = String(memVal).padStart(3, " ")
             }
         }
         Component.onCompleted: running = true

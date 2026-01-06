@@ -167,15 +167,15 @@ RowLayout {
                         }
                     }
                 }
-                workspaceBar.ws1Icons = wsIcons[1] ? wsIcons[1].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws2Icons = wsIcons[2] ? wsIcons[2].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws3Icons = wsIcons[3] ? wsIcons[3].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws4Icons = wsIcons[4] ? wsIcons[4].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws5Icons = wsIcons[5] ? wsIcons[5].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws6Icons = wsIcons[6] ? wsIcons[6].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws7Icons = wsIcons[7] ? wsIcons[7].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws8Icons = wsIcons[8] ? wsIcons[8].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws9Icons = wsIcons[9] ? wsIcons[9].icons.slice(0, 3).join(" ") : ""
+                workspaceBar.ws1Icons = wsIcons[1] ? wsIcons[1].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws2Icons = wsIcons[2] ? wsIcons[2].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws3Icons = wsIcons[3] ? wsIcons[3].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws4Icons = wsIcons[4] ? wsIcons[4].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws5Icons = wsIcons[5] ? wsIcons[5].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws6Icons = wsIcons[6] ? wsIcons[6].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws7Icons = wsIcons[7] ? wsIcons[7].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws8Icons = wsIcons[8] ? wsIcons[8].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws9Icons = wsIcons[9] ? wsIcons[9].icons.slice(0, 3).join("   ") : ""
             }
         }
         Component.onCompleted: running = true

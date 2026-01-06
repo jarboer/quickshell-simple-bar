@@ -93,12 +93,12 @@ ShellRoot {
                     Item { Layout.fillWidth: true }
 
                     // Slack indicator
-                    SlackWidget {}
+                    // SlackWidget {}
 
                     // WhatsApp indicator
-                    WhatsAppWidget {}
+                    // WhatsAppWidget {}
 
-                    Separator {}
+                    // Separator {}
 
                     // System stats
                     CpuWidget {
@@ -123,18 +123,18 @@ ShellRoot {
                         Layout.rightMargin: 8
                     }
 
-                    Separator {}
+                    // Separator {}
 
-                    BatteryWidget {
-                        Layout.rightMargin: 8
-                    }
+                    // BatteryWidget {
+                    //     Layout.rightMargin: 8
+                    // }
 
                     Separator {}
 
                     // WiFi indicator
-                    WifiWidget {
-                        barWindow: barWindow
-                    }
+                    // WifiWidget {
+                    //     barWindow: barWindow
+                    // }
 
                     // Bluetooth indicator
                     BluetoothWidget {
@@ -163,14 +163,15 @@ ShellRoot {
                 }
 
                 // Click overlay to close popups - sits on top but propagates clicks
-                MouseArea {
-                    anchors.fill: parent
-                    propagateComposedEvents: true
-                    onClicked: (mouse) => {
-                        barWindow.closeAllPopups()
-                        mouse.accepted = false
-                    }
-                }
+                // Disabled because it broke hover and didn't seem to break overlay closing
+                // MouseArea {
+                //     anchors.fill: parent
+                //     propagateComposedEvents: true
+                //     onClicked: (mouse) => {
+                //         barWindow.closeAllPopups()
+                //         mouse.accepted = false
+                //     }
+                // }
             }
         }
     }

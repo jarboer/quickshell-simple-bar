@@ -6,11 +6,15 @@ import ".."
 Text {
     id: cpuWidget
 
-    property int cpuUsage: 0
+    Layout.preferredWidth: 56
+    Layout.alignment: Qt.AlignRight
+    horizontalAlignment: Text.AlignRight
+
+    property string cpuUsage: " 0"
     property var lastCpuIdle: 0
     property var lastCpuTotal: 0
 
-    text: cpuUsage + "% 󰍛"
+    text: "󰍛  " + cpuUsage + "%"
     color: Theme.colCpu
     font.pixelSize: Theme.fontSize
     font.family: Theme.fontFamily
@@ -38,7 +42,8 @@ Text {
                     var totalDiff = total - cpuWidget.lastCpuTotal
                     var idleDiff = idleTime - cpuWidget.lastCpuIdle
                     if (totalDiff > 0) {
-                        cpuWidget.cpuUsage = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
+                        var cpuVal = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
+                        cpuWidget.cpuUsage = String(cpuVal).padStart(3, " ")
                     }
                 }
                 cpuWidget.lastCpuTotal = total

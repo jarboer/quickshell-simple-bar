@@ -182,23 +182,37 @@ Item {
             var match = weatherText.match(/-?\d+°\s*(.+)$/)
             return match ? match[1] : ""
         }
-
+        
         // DND toggle
-        Text {
-            text: dndEnabled ? "󰂛  " : "󰂚  "
-            color: dndEnabled ? "#ff5555" : Theme.colMuted
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
+        Rectangle {
+            id: dndPill
+            color: dndMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.05) : "transparent"
+            radius: 8
+            height: 26
+            width: dndIcon.implicitHeight
             anchors.verticalCenter: parent.verticalCenter
 
+            Text {
+                id: dndIcon
+                text: dndEnabled ? "󰂛" : "󰂚"
+                color: dndEnabled ? "#ff5555" : Theme.colMuted
+                font.pixelSize: Theme.fontSize
+                font.family: Theme.fontFamily
+                font.bold: true
+                anchors.centerIn: parent
+            }
+
             MouseArea {
+                id: dndMouseArea
                 anchors.fill: parent
+                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: dndToggleProc.running = true
             }
         }
 
+        Item { width: 8; height: parent.height}
+        
         Text {
             text: centerDate
             color: Theme.colFg
@@ -211,7 +225,7 @@ Item {
         // Separator with spacing
         Text {
             visible: weatherText !== ""
-            text: " |"
+            text: "  |"
             color: Theme.colMuted
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
@@ -222,7 +236,8 @@ Item {
         Rectangle {
             id: weatherPill
             visible: weatherText !== ""
-            color: popupVisible ? Theme.colBg : "transparent"
+            // color: popupVisible ? Theme.colBg : "transparent"
+            color: popupVisible ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : weatherMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.05) : "transparent"
             radius: 8
             height: 26
             width: weatherRow.implicitWidth + 16
@@ -235,7 +250,7 @@ Item {
 
                 Text {
                     visible: centerText.barIcon !== ""
-                    text: centerText.barIcon + " "
+                    text: centerText.barIcon + "    "
                     color: getTempColor(weatherText)
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -263,6 +278,19 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
+
+            MouseArea {
+                id: weatherMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: weatherText ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                onClicked: {
+                    if (weatherText) {
+                        centerInfo.popupVisible = !centerInfo.popupVisible
+                    }
+                }
+            }
         }
     }
 
@@ -270,7 +298,7 @@ Item {
     Process {
         id: weatherProc
         property string output: ""
-        command: ["sh", "-c", "$HOME/.config/quickshell/scripts/weather.py 2>/dev/null"]
+        command: ["sh", "-c", "$HOME/.config/quickshell/scripts/.venv/bin/python $HOME/.config/quickshell/scripts/weather.py 2>/dev/null"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) weatherProc.output += data
@@ -344,17 +372,6 @@ Item {
         running: true
         repeat: true
         onTriggered: weatherProc.running = true
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: weatherText ? Qt.PointingHandCursor : Qt.ArrowCursor
-
-        onClicked: {
-            if (weatherText) {
-                centerInfo.popupVisible = !centerInfo.popupVisible
-            }
-        }
     }
 
     HyprlandFocusGrab {
