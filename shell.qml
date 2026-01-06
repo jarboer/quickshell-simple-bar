@@ -141,6 +141,10 @@ ShellRoot {
                         barWindow: barWindow
                     }
 
+                    DarkModeWidget {
+                        barWindow: barWindow
+                    }
+
                     // Power profile
                     PowerProfileWidget {
                         barWindow: barWindow
