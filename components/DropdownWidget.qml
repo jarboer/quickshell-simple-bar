@@ -7,7 +7,7 @@ import ".."
 
 Item {
     id: root
-    Layout.preferredWidth: iconContainer.width
+    Layout.preferredWidth: iconContainer.width + 10
     Layout.preferredHeight: parent.height
     Layout.rightMargin: 8
 
@@ -36,14 +36,23 @@ Item {
         height: parent.height
     }
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            dropdownOpen = !dropdownOpen
-            if (dropdownOpen) {
-                root.opened()
+    Rectangle {
+        color: dropdownOpen ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.2) : dropdownMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+        radius: 8
+        height: 26
+        width: iconContainer.width + 10
+        anchors.centerIn: parent
+
+        MouseArea {
+            id: dropdownMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                dropdownOpen = !dropdownOpen
+                if (dropdownOpen) {
+                    root.opened()
+                }
             }
         }
     }

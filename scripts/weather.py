@@ -104,7 +104,7 @@ icon = weather_icons.get(status_code, weather_icons["default"])
 temp_feel = html_data(
     "div[data-testid='FeelsLikeSection'] > span > span[data-testid='TemperatureValue']"
 ).text()
-temp_feel_text = f"Feels like {temp_feel}c"
+temp_feel_text = f"Feels like {temp_feel}C"
 
 # min-max temperature
 temp_min = (

@@ -50,6 +50,12 @@ Item {
         }
     }
 
+    // DND toggle Notification Centre
+    Process {
+        id: dndToggleNotiCentre
+        command: ["swaync-client", "-t", "-sw"]
+    }
+
     // DND status update timer
     Timer {
         interval: 5000
@@ -186,7 +192,7 @@ Item {
         // DND toggle
         Rectangle {
             id: dndPill
-            color: dndMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.05) : "transparent"
+            color: (dndLeftMouseArea.containsMouse && dndRightMouseArea.containsMouse) ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
             radius: 8
             height: 26
             width: dndIcon.implicitHeight
@@ -203,9 +209,19 @@ Item {
             }
 
             MouseArea {
-                id: dndMouseArea
+                id: dndLeftMouseArea
                 anchors.fill: parent
                 hoverEnabled: true
+                acceptedButtons: Qt.LeftButton
+                cursorShape: Qt.PointingHandCursor
+                onClicked: dndToggleNotiCentre.running = true
+            }
+
+            MouseArea {
+                id: dndRightMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                acceptedButtons: Qt.RightButton
                 cursorShape: Qt.PointingHandCursor
                 onClicked: dndToggleProc.running = true
             }
@@ -237,7 +253,7 @@ Item {
             id: weatherPill
             visible: weatherText !== ""
             // color: popupVisible ? Theme.colBg : "transparent"
-            color: popupVisible ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : weatherMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.05) : "transparent"
+            color: popupVisible ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.2) : weatherMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
             radius: 8
             height: 26
             width: weatherRow.implicitWidth + 16
@@ -543,7 +559,7 @@ Item {
             // Feels like
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: centerInfo.weatherFeelsLike ? "Feels " + centerInfo.weatherFeelsLike : ""
+                text: centerInfo.weatherFeelsLike ? "Feels like " + centerInfo.weatherFeelsLike : ""
                 color: Theme.colMuted
                 font.pixelSize: Theme.fontSize - 2
                 font.family: Theme.fontFamily
