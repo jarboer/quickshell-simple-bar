@@ -11,8 +11,8 @@ RowLayout {
     // Window class to icon mapping
     property var windowIcons: ({
         // Browsers
-        "firefox": "",
-        "org.mozilla.firefox": "",
+        "firefox": "󰈹",
+        "org.mozilla.firefox": "󰈹",
         "librewolf": "",
         "floorp": "",
         "cachy-browser": "",

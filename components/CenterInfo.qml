@@ -422,53 +422,57 @@ Item {
                 var ctx = getContext("2d")
                 ctx.fillStyle = Theme.colBg
 
-                var sw = stemWidth
-                var sh = stemHeight
-                var nr = notchRadius
-                var r = cardRadius
-                var w = width
-                var h = height
-                var cx = w / 2
+                var cx = width / 2
 
                 // Calculate stem edges
-                var stemLeft = cx - sw/2
-                var stemRight = cx + sw/2
+                var stemLeft = cx - stemWidth/2
+                var stemRight = cx + stemWidth/2
+
+                var gapSize = 2
 
                 ctx.beginPath()
                 // Start at top-left of stem
-                ctx.moveTo(stemLeft + r, 0)
+                ctx.moveTo(stemLeft + cardRadius, 0)
+
+                // 1/4 of a circle
                 // Top edge of stem
-                ctx.lineTo(stemRight - r, 0)
+                ctx.lineTo(stemRight - cardRadius, 0)
                 // Top-right corner of stem
-                ctx.arcTo(stemRight, 0, stemRight, r, r)
+                ctx.arcTo(stemRight, 0, stemRight, cardRadius, cardRadius)
+                // Arc triangle
                 // Right edge of stem down
-                ctx.lineTo(stemRight, sh - nr)
+                ctx.lineTo(stemRight - gapSize, stemHeight - notchRadius)
                 // Notch curve (concave) - right side
-                ctx.arcTo(stemRight, sh, stemRight + nr, sh, nr)
+                ctx.arcTo(stemRight - gapSize, stemHeight, stemRight - gapSize + notchRadius, stemHeight, notchRadius)
+
                 // Top edge to right card corner
-                ctx.lineTo(w - r, sh)
+                ctx.lineTo(width - cardRadius, stemHeight)
                 // Top-right corner of card
-                ctx.arcTo(w, sh, w, sh + r, r)
+                ctx.arcTo(width, stemHeight, width, stemHeight + cardRadius, cardRadius)
                 // Right edge of card
-                ctx.lineTo(w, h - r)
+                ctx.lineTo(width, height - cardRadius)
                 // Bottom-right corner
-                ctx.arcTo(w, h, w - r, h, r)
+                ctx.arcTo(width, height, width - cardRadius, height, cardRadius)
                 // Bottom edge
-                ctx.lineTo(r, h)
+                ctx.lineTo(cardRadius, height)
                 // Bottom-left corner
-                ctx.arcTo(0, h, 0, h - r, r)
+                ctx.arcTo(0, height, 0, height - cardRadius, cardRadius)
                 // Left edge of card
-                ctx.lineTo(0, sh + r)
+                ctx.lineTo(0, stemHeight + cardRadius)
                 // Top-left corner of card
-                ctx.arcTo(0, sh, r, sh, r)
+                ctx.arcTo(0, stemHeight, cardRadius, stemHeight, cardRadius)
+
+                // 1/4 of a circle
                 // Top edge to left notch
-                ctx.lineTo(stemLeft - nr, sh)
+                ctx.lineTo(stemLeft - notchRadius, stemHeight)
                 // Notch curve (concave) - left side
-                ctx.arcTo(stemLeft, sh, stemLeft, sh - nr, nr)
+                ctx.arcTo(stemLeft, stemHeight, stemLeft, stemHeight - notchRadius, notchRadius)
+                // Arc triangle
                 // Left edge of stem up
-                ctx.lineTo(stemLeft, r)
+                ctx.lineTo(stemLeft - gapSize, cardRadius)
                 // Top-left corner of stem
-                ctx.arcTo(stemLeft, 0, stemLeft + r, 0, r)
+                ctx.arcTo(stemLeft - gapSize, 0, stemLeft - gapSize + cardRadius, 0, cardRadius)
+
                 ctx.closePath()
                 ctx.fill()
             }

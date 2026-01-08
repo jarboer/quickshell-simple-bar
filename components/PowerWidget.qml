@@ -13,7 +13,8 @@ DropdownWidget {
     // Power actions
     Process {
         id: lockProc
-        command: ["loginctl", "lock-session"]
+        command: ["sh", "-c", "$HOME/.config/helper-scripts/lock.sh"]
+        // command: ["loginctl", "lock-session"]
     }
 
     Process {
