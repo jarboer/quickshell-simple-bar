@@ -5,7 +5,7 @@ import ".."
 
 Rectangle {
     id: volumePill
-    color: volumeMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+    color: volumeLeftMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
     radius: 8
     height: 26
     // width: volumeWidget.width
@@ -30,14 +30,14 @@ Rectangle {
         property string audioSink: "speaker"  // speaker, headphone, hdmi, bluetooth
 
         property string volumeIcon: {
-            if (volumeMuted) return "󰖁"
-            if (audioSink === "headphone") return ""
-            if (audioSink === "bluetooth") return "󰂰"
-            if (audioSink === "hdmi") return "󰡁"
+            if (volumeMuted) return "󰸈"
+            // if (audioSink === "headphone") return "󰋋"
+            // if (audioSink === "bluetooth") return "󰂰"
+            // if (audioSink === "hdmi") return "󰡁"
             // Speaker icons based on volume
-            if (volumeLevel < 30) return ""
-            if (volumeLevel < 70) return "󰕾"
-            return ""
+            if (volumeLevel < 30) return "󰕿"
+            if (volumeLevel < 70) return "󰖀"
+            return "󰕾"
         }
 
         text: volumeIcon + "   " + volumeLevel + "%"
@@ -50,11 +50,20 @@ Rectangle {
         font.bold: true
 
         MouseArea {
-            id: volumeMouseArea
+            id: volumeLeftMouseArea
             anchors.fill: parent
             hoverEnabled: true
+            acceptedButtons: Qt.LeftButton
             cursorShape: Qt.PointingHandCursor
             onClicked: volumeControlProc.running = true
+        }
+
+        MouseArea {
+            id: volumeRightMouseArea
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            cursorShape: Qt.PointingHandCursor
+            onClicked: volumeMuteProc.running = true
         }
     }
 
@@ -100,8 +109,15 @@ Rectangle {
     // Volume control launcher
     Process {
         id: volumeControlProc
-        command: ["pavucontrol"]
+        command: ["sh", "-c", "~/.config/helper-scripts/launch-volume-app.sh"]
     }
+
+    // Mute audio
+    Process {
+        id: volumeMuteProc
+        command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
+    }
+
 
     Timer {
         interval: 2000
