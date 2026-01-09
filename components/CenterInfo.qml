@@ -192,10 +192,10 @@ Item {
         // DND toggle
         Rectangle {
             id: dndPill
-            color: (dndLeftMouseArea.containsMouse && dndRightMouseArea.containsMouse) ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+            color: dndRightMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
             radius: 8
             height: 26
-            width: dndIcon.implicitHeight
+            width: dndIcon.implicitWidth + 8
             anchors.verticalCenter: parent.verticalCenter
 
             Text {
@@ -211,7 +211,6 @@ Item {
             MouseArea {
                 id: dndLeftMouseArea
                 anchors.fill: parent
-                hoverEnabled: true
                 acceptedButtons: Qt.LeftButton
                 cursorShape: Qt.PointingHandCursor
                 onClicked: dndToggleNotiCentre.running = true

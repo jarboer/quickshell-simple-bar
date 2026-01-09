@@ -3,42 +3,59 @@ import QtQuick.Layouts
 import Quickshell.Io
 import ".."
 
-Text {
-    id: volumeWidget
+Rectangle {
+    id: volumePill
+    color: volumeMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+    radius: 8
+    height: 26
+    // width: volumeWidget.width
+    // anchors.verticalCenter: parent.verticalCenter
 
-    Layout.preferredWidth: 56
-    Layout.alignment: Qt.AlignRight
-    horizontalAlignment: Text.AlignRight
+    Layout.preferredWidth: 60 // 56
+    // Layout.alignment: Qt.AlignRight
+    // horizontalAlignment: Text.AlignRight
 
-    property int volumeLevel: 0
-    property bool volumeMuted: false
-    property string audioSink: "speaker"  // speaker, headphone, hdmi, bluetooth
+    // anchors.centerIn: parent
 
-    property string volumeIcon: {
-        if (volumeMuted) return "󰖁"
-        if (audioSink === "headphone") return ""
-        if (audioSink === "bluetooth") return "󰂰"
-        if (audioSink === "hdmi") return "󰡁"
-        // Speaker icons based on volume
-        if (volumeLevel < 30) return ""
-        if (volumeLevel < 70) return "󰕾"
-        return ""
-    }
+    Text {
+        id: volumeWidget
+        // anchors.verticalCenter: parent.verticalCenter
+        // Layout.alignment: Qt.AlignRight
+        // horizontalAlignment: Text.AlignRight
 
-    text: volumeIcon + "   " + volumeLevel + "%"
-    color: volumeMuted ? Theme.colMuted :
-           audioSink === "headphone" ? "#f1fa8c" :
-           audioSink === "bluetooth" ? Theme.colBluetooth :
-           Theme.colVol
-    font.pixelSize: Theme.fontSize
-    font.family: Theme.fontFamily
-    font.bold: true
+        anchors.centerIn: parent
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        onClicked: volumeControlProc.running = true
+        property int volumeLevel: 0
+        property bool volumeMuted: false
+        property string audioSink: "speaker"  // speaker, headphone, hdmi, bluetooth
+
+        property string volumeIcon: {
+            if (volumeMuted) return "󰖁"
+            if (audioSink === "headphone") return ""
+            if (audioSink === "bluetooth") return "󰂰"
+            if (audioSink === "hdmi") return "󰡁"
+            // Speaker icons based on volume
+            if (volumeLevel < 30) return ""
+            if (volumeLevel < 70) return "󰕾"
+            return ""
+        }
+
+        text: volumeIcon + "   " + volumeLevel + "%"
+        color: volumeMuted ? Theme.colMuted :
+            audioSink === "headphone" ? "#f1fa8c" :
+            audioSink === "bluetooth" ? Theme.colBluetooth :
+            Theme.colVol
+        font.pixelSize: Theme.fontSize
+        font.family: Theme.fontFamily
+        font.bold: true
+
+        MouseArea {
+            id: volumeMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: volumeControlProc.running = true
+        }
     }
 
     // Volume level (wpctl for PipeWire)

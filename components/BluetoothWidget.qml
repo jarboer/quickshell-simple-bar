@@ -139,6 +139,7 @@ DropdownWidget {
         font.pixelSize: Theme.fontSize + 4
         font.family: Theme.fontFamily
         font.bold: true
+        // anchors.centerIn: parent
     }
 
     // Popup content

@@ -67,6 +67,8 @@ RowLayout {
         "spotify": "",
         "cider": "󰎆",
         "celluloid": "",
+        "WebApp-AppleMusic": "󰝚",
+        "WebApp-YouTube": "󰗃",
 
         // File managers
         "thunar": "󰝰",
@@ -92,6 +94,7 @@ RowLayout {
 
         // Claude Code / AI
         "claude": "󰚩",
+        "WebApp-ChatGPT": "󰚩",
     })
 
     // Store windows per workspace

@@ -120,7 +120,7 @@ ShellRoot {
                     //Separator {}
 
                     VolumeWidget {
-                        Layout.rightMargin: 8
+                        Layout.rightMargin: 4 //8
                     }
 
                     // Separator {}
