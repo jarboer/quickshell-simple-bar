@@ -20,8 +20,8 @@ RowLayout {
         "zen-browser": "󰰷",
         "zen-alpha": "󰰷",
         "microsoft-edge": "",
-        "chromium": "",
-        "google-chrome": "",
+        "chromium": "", // 󰊯
+        "google-chrome": "",
         "brave-browser": "󰖟",
         "vivaldi": "",
 
