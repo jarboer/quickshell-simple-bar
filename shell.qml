@@ -152,6 +152,8 @@ ShellRoot {
 
                 Separator {}
 
+                NotificationWidget {}
+
                 // Clock
                 Clock {}
 
