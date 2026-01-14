@@ -6,10 +6,11 @@ import ".."
 
 Item {
     id: centerInfo
-    implicitWidth: centerText.implicitWidth
-    implicitHeight: parent.height
+    implicitWidth: dndPill.width
+    // implicitHeight: parent.height
 
     property bool dndEnabled: false
+    property int notifCount: 0
 
     // DND status check
     Process {
@@ -18,6 +19,18 @@ Item {
         stdout: SplitParser {
             onRead: data => {
                 if (data) centerInfo.dndEnabled = data.trim() === "true"
+            }
+        }
+        Component.onCompleted: running = true
+    }
+
+    // Notification count check
+    Process {
+        id: notifCountProc
+        command: ["swaync-client", "-c"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data) centerInfo.notifCount = parseInt(data.trim())
             }
         }
         Component.onCompleted: running = true
@@ -32,9 +45,9 @@ Item {
         }
     }
 
-    // DND toggle Notification Center
+    // Toggle Notification Center
     Process {
-        id: dndToggleNotiCenter
+        id: toggleNotifCenterProc
         command: ["swaync-client", "-t", "-sw"]
     }
 
@@ -43,51 +56,63 @@ Item {
         interval: 5000
         running: true
         repeat: true
-        onTriggered: dndStatusProc.running = true
+        onTriggered: {
+            dndStatusProc.running = true
+            notifCountProc.running = true
+        }
     }
-
-    Row {
-        id: centerText
-        anchors.centerIn: parent
-        spacing: 0
         
-        // DND toggle
-        Rectangle {
-            id: dndPill
-            color: dndRightMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
-            radius: 8
-            height: 26
-            width: dndIcon.implicitWidth + 8
-            anchors.verticalCenter: parent.verticalCenter
+    // DND toggle
+    Rectangle {
+        id: dndPill
+        color: notifMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+        radius: 8
+        height: 26
+        width: dndTextCont.width + 8
+        anchors.verticalCenter: parent.verticalCenter
+
+        Row {
+            id: dndTextCont
+            anchors.centerIn: parent
+            spacing: 6
+
+            Item {
+                height: parent.height
+                width: 14
+                
+                Text {
+                    anchors.centerIn: parent
+                    text: (dndEnabled ? "󰂛" : "󰂚")
+                    color: dndEnabled ? "#ff5555" : Theme.colMuted
+                    font.pixelSize: Theme.fontSize
+                    font.family: Theme.fontFamily
+                    font.bold: true
+                }
+            }
 
             Text {
-                id: dndIcon
-                text: dndEnabled ? "󰂛" : "󰂚"
-                color: dndEnabled ? "#ff5555" : Theme.colMuted
+                text: centerInfo.notifCount
+                color: Theme.colFg
                 font.pixelSize: Theme.fontSize
                 font.family: Theme.fontFamily
                 font.bold: true
-                anchors.centerIn: parent
-            }
-
-            MouseArea {
-                id: dndLeftMouseArea
-                anchors.fill: parent
-                acceptedButtons: Qt.LeftButton
-                cursorShape: Qt.PointingHandCursor
-                onClicked: dndToggleNotiCenter.running = true
-            }
-
-            MouseArea {
-                id: dndRightMouseArea
-                anchors.fill: parent
-                hoverEnabled: true
-                acceptedButtons: Qt.RightButton
-                cursorShape: Qt.PointingHandCursor
-                onClicked: dndToggleProc.running = true
             }
         }
 
-        Item { width: 4; height: parent.height}
+        MouseArea {
+            id: notifMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            cursorShape: Qt.PointingHandCursor
+
+            onClicked: event => {
+                if (event.button === Qt.LeftButton) {
+                    toggleNotifCenterProc.running = true
+                } else if (event.button === Qt.RightButton) {
+                    dndToggleProc.running = true
+                }
+            }
+        }
     }
 }

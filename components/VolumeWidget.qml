@@ -6,7 +6,7 @@ import ".."
 Rectangle {
     id: volumePill
     color: volumeWidget.volumeControlOpen ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.2) : 
-           volumeLeftMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : 
+           volumeMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : 
            "transparent"
     radius: 8
     height: 26
@@ -53,20 +53,27 @@ Rectangle {
         font.bold: true
 
         MouseArea {
-            id: volumeLeftMouseArea
+            id: volumeMouseArea
             anchors.fill: parent
             hoverEnabled: true
-            acceptedButtons: Qt.LeftButton
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
             cursorShape: Qt.PointingHandCursor
-            onClicked: volumeControlProc.running = true
-        }
 
-        MouseArea {
-            id: volumeRightMouseArea
-            anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-            cursorShape: Qt.PointingHandCursor
-            onClicked: volumeMuteProc.running = true
+            onClicked: event => {
+                if (event.button === Qt.LeftButton) {
+                    volumeControlProc.running = true
+                } else if (event.button === Qt.RightButton) {
+                    volumeMuteProc.running = true
+                }
+            }
+
+            onWheel: wheel => {
+                if (wheel.angleDelta.y > 0) {
+                    volumeLevelIncProc.running = true
+                } else if (wheel.angleDelta.y < 0) {
+                    volumeLevelDecrProc.running = true
+                }
+            }
         }
     }
 
@@ -120,6 +127,19 @@ Rectangle {
         id: volumeMuteProc
         command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
     }
+
+    // Volume level increase
+    Process {
+        id: volumeLevelIncProc
+        command: ["wpctl", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "2%+"]
+    }
+
+    // Volume level decrease
+    Process {
+        id: volumeLevelDecrProc
+        command: ["wpctl", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@", "2%-"]
+    }
+
 
     Process {
         id: volumeControlOpenProc

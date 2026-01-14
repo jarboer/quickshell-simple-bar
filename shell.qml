@@ -135,6 +135,9 @@ ShellRoot {
                 // WifiWidget {
                 //     barWindow: barWindow
                 // }
+                EthernetWidget {
+                    barWindow: barWindow
+                }
 
                 // Bluetooth indicator
                 BluetoothWidget {
@@ -150,9 +153,17 @@ ShellRoot {
                     barWindow: barWindow
                 }
 
-                Separator {}
+                // Separator {}
+
+                TrayWidget {
+                    barWindow: barWindow
+                }
+
+                Separator {} // TODO: Make dynamic
 
                 NotificationWidget {}
+
+                SeparatorText {}
 
                 // Clock
                 Clock {}
