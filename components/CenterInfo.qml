@@ -9,6 +9,7 @@ Item {
     id: centerInfo
     implicitWidth: centerText.implicitWidth
     implicitHeight: parent.height
+    anchors.centerIn: parent
 
     required property var barWindow
 
@@ -38,7 +39,7 @@ Item {
         if (temp <= 18) return "#50fa7b"     // Cool - green
         if (temp <= 25) return "#f1fa8c"     // Warm - yellow
         if (temp <= 32) return "#ffb86c"     // Hot - orange
-        return "#ff5555"                      // Very hot - red
+        return "#ff5555"                     // Very hot - red
     }
 
     // Get color based on weather condition
@@ -152,6 +153,17 @@ Item {
             var match = weatherText.match(/-?\d+°\s*(.+)$/)
             return match ? match[1] : ""
         }
+
+        // Clock {}
+
+        // // Separator with spacing
+        // Text {
+        //     text: "  •  "
+        //     color: Theme.colMuted
+        //     font.pixelSize: Theme.fontSize
+        //     font.family: Theme.fontFamily
+        //     anchors.verticalCenter: parent.verticalCenter
+        // }
         
         DateWidget {}
 

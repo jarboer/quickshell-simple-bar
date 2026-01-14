@@ -1,18 +1,18 @@
 import QtQuick
+import Quickshell
 import ".."
 
 Text {
     id: clockText
-    text: " " + Qt.formatDateTime(new Date(), "hh:mm AP")
+    anchors.verticalCenter: parent.verticalCenter
+    text: Qt.formatDateTime(clock.date, "hh:mm AP")
     color: Theme.colClock
     font.pixelSize: Theme.fontSize
     font.family: Theme.fontFamily
     font.bold: true
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: clockText.text = " " + Qt.formatDateTime(new Date(), "hh:mm AP")
+    
+    SystemClock {
+        id: clock
+        precision: SystemClock.Minutes
     }
 }

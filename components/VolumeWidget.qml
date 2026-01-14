@@ -5,7 +5,9 @@ import ".."
 
 Rectangle {
     id: volumePill
-    color: volumeLeftMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+    color: volumeWidget.volumeControlOpen ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.2) : 
+           volumeLeftMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : 
+           "transparent"
     radius: 8
     height: 26
     // width: volumeWidget.width
@@ -28,6 +30,7 @@ Rectangle {
         property int volumeLevel: 0
         property bool volumeMuted: false
         property string audioSink: "speaker"  // speaker, headphone, hdmi, bluetooth
+        property bool volumeControlOpen: false
 
         property string volumeIcon: {
             if (volumeMuted) return "󰸈"
@@ -118,14 +121,27 @@ Rectangle {
         command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
     }
 
+    Process {
+        id: volumeControlOpenProc
+        command: ["sh", "-c", "pgrep -x pavucontrol >/dev/null 2>&1 && echo true || echo false"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (!data) return
+
+                volumeWidget.volumeControlOpen = data.trim() === "true"
+            }
+        }
+        Component.onCompleted: running = true
+    }
 
     Timer {
-        interval: 2000
+        interval: 500
         running: true
         repeat: true
         onTriggered: {
             volProc.running = true
             sinkProc.running = true
+            volumeControlOpenProc.running = true
         }
     }
 }
