@@ -126,6 +126,9 @@ Rectangle {
     Process {
         id: volumeMuteProc
         command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
+        onRunningChanged: {
+            if (!running) volProc.running = true
+        }
     }
 
     // Volume level increase

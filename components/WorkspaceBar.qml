@@ -58,7 +58,7 @@ RowLayout {
         "zed": "󰵁",
         "subl": "󰅳",
         "sublime_text": "󰅳",
-        "jetbrains-idea": "",
+        "jetbrains-idea": "",
         "neovide": "",
 
         // Media
@@ -81,20 +81,25 @@ RowLayout {
         "pavucontrol": "󱡫",
         "org.pulseaudio.pavucontrol": "󱡫",
         "nwg-look": "",
-        "steam": "",
         "obs": "",
         "com.obsproject.studio": "",
-        "gimp": "",
-        "virt-manager": "",
+        "gimp": "",
+        "virt-manager": "",
+        "aether": "󰉼",
 
         // Office
-        "libreoffice-writer": "",
-        "libreoffice-calc": "",
+        "libreoffice-writer": "",
+        "libreoffice-calc": "",
         "libreoffice-startcenter": "󰏆",
 
         // Claude Code / AI
         "claude": "󰚩",
         "WebApp-ChatGPT": "󰚩",
+
+        // Games
+        "steam": "󰓓",
+        "HytaleClient": "󰌪",
+        "Terraria": "󰔱",
     })
 
     // Store windows per workspace
@@ -275,7 +280,7 @@ RowLayout {
                 Text {
                     text: wsRect.windowIconsStr
                     color: wsRect.isActive ? Theme.colWorkspaceActive : Theme.colFg
-                    font.pixelSize: Theme.fontSize - 1
+                    font.pixelSize: Theme.fontSize + 4 // - 1
                     font.family: Theme.fontFamily
                     visible: wsRect.windowIconsStr.length > 0
                     anchors.verticalCenter: parent.verticalCenter

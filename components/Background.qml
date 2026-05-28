@@ -10,7 +10,7 @@ Item {
   id: backgroundRoot
   property int imgWidth: 0
   property string currentPath: ""
-  property string wallpaperPath: "/home/jarboer/.config/omarchy/current/background"
+  property string wallpaperPath: "/home/jarboer/.config/aether/theme/backgrounds/background"
   property var lastModtime: 0
 
   // Rectangle {

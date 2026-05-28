@@ -294,16 +294,6 @@ DropdownWidget {
                                 }
                             }
 
-                            // Text {
-                            //     Layout.leftMargin: 17
-                            //     text: "MAC Address: " + modelData["GENERAL"]["HWADDR"]
-                            //     color: Theme.colFg
-                            //     font.pixelSize: Theme.fontSize - 1
-                            //     font.family: Theme.fontFamily
-                            //     Layout.fillWidth: true
-                            //     elide: Text.ElideRight
-                            // }
-
                             ListText {
                                 value: modelData["GENERAL"]["HWADDR"]
                                 title: "MAC Address: "
