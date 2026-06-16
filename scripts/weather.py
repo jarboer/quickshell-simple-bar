@@ -35,7 +35,7 @@ def get_location():
 latitude, longitude = get_location()
 
 # Open-Meteo API endpoint
-url = f"https://weather.com/en-PH/weather/today/l/{latitude},{longitude}"
+url = f"https://weather.com/en-CA/weather/today/l/{latitude},{longitude}"
 
 # manual location_id
 # NOTE: if you want to add manually, make sure you disable def get_location above
@@ -55,7 +55,8 @@ html_data = PyQuery(url=url)
 location = html_data("h1[class*='CurrentConditions--location']").text()
 # Extract city name (second part, e.g., "Vienna" from "Innere Stadt, Vienna 1010, Austria")
 location_parts = location.split(",") if location else []
-location_short = location_parts[1].split()[0] if len(location_parts) > 1 else location_parts[0] if location_parts else ""
+# location_short = location_parts[1].split()[0] if len(location_parts) > 1 else location_parts[0] if location_parts else ""
+location_short = location_parts[0] if location_parts else ""
 
 # current temperature
 temp = html_data("span[data-testid='TemperatureValue']").eq(0).text()
@@ -103,7 +104,7 @@ icon = weather_icons.get(status_code, weather_icons["default"])
 temp_feel = html_data(
     "div[data-testid='FeelsLikeSection'] > span > span[data-testid='TemperatureValue']"
 ).text()
-temp_feel_text = f"Feels like {temp_feel}c"
+temp_feel_text = f"Feels like {temp_feel}C"
 
 # min-max temperature
 temp_min = (

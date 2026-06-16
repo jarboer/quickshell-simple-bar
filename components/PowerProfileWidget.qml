@@ -84,7 +84,7 @@ DropdownWidget {
 
             // Header
             Text {
-                text: "󰾅 Power Profile"
+                text: "Power Profile" // " 󰾅   Power Profile"
                 color: Theme.colFg
                 font.pixelSize: Theme.fontSize
                 font.family: Theme.fontFamily

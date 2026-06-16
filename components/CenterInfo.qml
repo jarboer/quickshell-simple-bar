@@ -9,6 +9,7 @@ Item {
     id: centerInfo
     implicitWidth: centerText.implicitWidth
     implicitHeight: parent.height
+    anchors.centerIn: parent
 
     required property var barWindow
 
@@ -27,36 +28,6 @@ Item {
     property var hourlyRain: []
 
     property bool popupVisible: false
-    property bool dndEnabled: false
-
-    // DND status check
-    Process {
-        id: dndStatusProc
-        command: ["swaync-client", "-D"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data) centerInfo.dndEnabled = data.trim() === "true"
-            }
-        }
-        Component.onCompleted: running = true
-    }
-
-    // DND toggle process
-    Process {
-        id: dndToggleProc
-        command: ["swaync-client", "-d"]
-        onRunningChanged: {
-            if (!running) dndStatusProc.running = true
-        }
-    }
-
-    // DND status update timer
-    Timer {
-        interval: 5000
-        running: true
-        repeat: true
-        onTriggered: dndStatusProc.running = true
-    }
 
     // Get color based on temperature (Celsius)
     function getTempColor(tempStr) {
@@ -68,7 +39,7 @@ Item {
         if (temp <= 18) return "#50fa7b"     // Cool - green
         if (temp <= 25) return "#f1fa8c"     // Warm - yellow
         if (temp <= 32) return "#ffb86c"     // Hot - orange
-        return "#ff5555"                      // Very hot - red
+        return "#ff5555"                     // Very hot - red
     }
 
     // Get color based on weather condition
@@ -183,35 +154,23 @@ Item {
             return match ? match[1] : ""
         }
 
-        // DND toggle
-        Text {
-            text: dndEnabled ? "󰂛  " : "󰂚  "
-            color: dndEnabled ? "#ff5555" : Theme.colMuted
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
-            anchors.verticalCenter: parent.verticalCenter
+        // Clock {}
 
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                onClicked: dndToggleProc.running = true
-            }
-        }
-
-        Text {
-            text: centerDate
-            color: Theme.colFg
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
-            anchors.verticalCenter: parent.verticalCenter
-        }
+        // // Separator with spacing
+        // Text {
+        //     text: "  •  "
+        //     color: Theme.colMuted
+        //     font.pixelSize: Theme.fontSize
+        //     font.family: Theme.fontFamily
+        //     anchors.verticalCenter: parent.verticalCenter
+        // }
+        
+        DateWidget {}
 
         // Separator with spacing
         Text {
             visible: weatherText !== ""
-            text: " |"
+            text: "  |"
             color: Theme.colMuted
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
@@ -222,7 +181,8 @@ Item {
         Rectangle {
             id: weatherPill
             visible: weatherText !== ""
-            color: popupVisible ? Theme.colBg : "transparent"
+            // color: popupVisible ? Theme.colBg : "transparent"
+            color: popupVisible ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.2) : weatherMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
             radius: 8
             height: 26
             width: weatherRow.implicitWidth + 16
@@ -235,7 +195,7 @@ Item {
 
                 Text {
                     visible: centerText.barIcon !== ""
-                    text: centerText.barIcon + " "
+                    text: centerText.barIcon + "    "
                     color: getTempColor(weatherText)
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily
@@ -263,6 +223,19 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
+
+            MouseArea {
+                id: weatherMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: weatherText ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                onClicked: {
+                    if (weatherText) {
+                        centerInfo.popupVisible = !centerInfo.popupVisible
+                    }
+                }
+            }
         }
     }
 
@@ -270,7 +243,7 @@ Item {
     Process {
         id: weatherProc
         property string output: ""
-        command: ["sh", "-c", "$HOME/.config/quickshell/scripts/weather.py 2>/dev/null"]
+        command: ["sh", "-c", "$HOME/.config/quickshell/scripts/.venv/bin/python $HOME/.config/quickshell/scripts/weather.py 2>/dev/null"]
         stdout: SplitParser {
             onRead: data => {
                 if (data) weatherProc.output += data
@@ -330,31 +303,12 @@ Item {
         }
     }
 
-    // Date update timer
-    Timer {
-        interval: 60000
-        running: true
-        repeat: true
-        onTriggered: centerDate = Qt.formatDateTime(new Date(), "ddd, MMM d")
-    }
-
     // Weather timer (hourly updates)
     Timer {
         interval: 3600000
         running: true
         repeat: true
         onTriggered: weatherProc.running = true
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: weatherText ? Qt.PointingHandCursor : Qt.ArrowCursor
-
-        onClicked: {
-            if (weatherText) {
-                centerInfo.popupVisible = !centerInfo.popupVisible
-            }
-        }
     }
 
     HyprlandFocusGrab {
@@ -389,53 +343,57 @@ Item {
                 var ctx = getContext("2d")
                 ctx.fillStyle = Theme.colBg
 
-                var sw = stemWidth
-                var sh = stemHeight
-                var nr = notchRadius
-                var r = cardRadius
-                var w = width
-                var h = height
-                var cx = w / 2
+                var cx = width / 2
 
                 // Calculate stem edges
-                var stemLeft = cx - sw/2
-                var stemRight = cx + sw/2
+                var stemLeft = cx - stemWidth/2
+                var stemRight = cx + stemWidth/2
+
+                var gapSize = 2
 
                 ctx.beginPath()
                 // Start at top-left of stem
-                ctx.moveTo(stemLeft + r, 0)
+                ctx.moveTo(stemLeft + cardRadius, 0)
+
+                // 1/4 of a circle
                 // Top edge of stem
-                ctx.lineTo(stemRight - r, 0)
+                ctx.lineTo(stemRight - cardRadius, 0)
                 // Top-right corner of stem
-                ctx.arcTo(stemRight, 0, stemRight, r, r)
+                ctx.arcTo(stemRight, 0, stemRight, cardRadius, cardRadius)
+                // Arc triangle
                 // Right edge of stem down
-                ctx.lineTo(stemRight, sh - nr)
+                ctx.lineTo(stemRight - gapSize, stemHeight - notchRadius)
                 // Notch curve (concave) - right side
-                ctx.arcTo(stemRight, sh, stemRight + nr, sh, nr)
+                ctx.arcTo(stemRight - gapSize, stemHeight, stemRight - gapSize + notchRadius, stemHeight, notchRadius)
+
                 // Top edge to right card corner
-                ctx.lineTo(w - r, sh)
+                ctx.lineTo(width - cardRadius, stemHeight)
                 // Top-right corner of card
-                ctx.arcTo(w, sh, w, sh + r, r)
+                ctx.arcTo(width, stemHeight, width, stemHeight + cardRadius, cardRadius)
                 // Right edge of card
-                ctx.lineTo(w, h - r)
+                ctx.lineTo(width, height - cardRadius)
                 // Bottom-right corner
-                ctx.arcTo(w, h, w - r, h, r)
+                ctx.arcTo(width, height, width - cardRadius, height, cardRadius)
                 // Bottom edge
-                ctx.lineTo(r, h)
+                ctx.lineTo(cardRadius, height)
                 // Bottom-left corner
-                ctx.arcTo(0, h, 0, h - r, r)
+                ctx.arcTo(0, height, 0, height - cardRadius, cardRadius)
                 // Left edge of card
-                ctx.lineTo(0, sh + r)
+                ctx.lineTo(0, stemHeight + cardRadius)
                 // Top-left corner of card
-                ctx.arcTo(0, sh, r, sh, r)
+                ctx.arcTo(0, stemHeight, cardRadius, stemHeight, cardRadius)
+
+                // 1/4 of a circle
                 // Top edge to left notch
-                ctx.lineTo(stemLeft - nr, sh)
+                ctx.lineTo(stemLeft - notchRadius, stemHeight)
                 // Notch curve (concave) - left side
-                ctx.arcTo(stemLeft, sh, stemLeft, sh - nr, nr)
+                ctx.arcTo(stemLeft, stemHeight, stemLeft, stemHeight - notchRadius, notchRadius)
+                // Arc triangle
                 // Left edge of stem up
-                ctx.lineTo(stemLeft, r)
+                ctx.lineTo(stemLeft - gapSize, cardRadius)
                 // Top-left corner of stem
-                ctx.arcTo(stemLeft, 0, stemLeft + r, 0, r)
+                ctx.arcTo(stemLeft - gapSize, 0, stemLeft - gapSize + cardRadius, 0, cardRadius)
+
                 ctx.closePath()
                 ctx.fill()
             }
@@ -526,7 +484,7 @@ Item {
             // Feels like
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: centerInfo.weatherFeelsLike ? "Feels " + centerInfo.weatherFeelsLike : ""
+                text: centerInfo.weatherFeelsLike ? "Feels like " + centerInfo.weatherFeelsLike : ""
                 color: Theme.colMuted
                 font.pixelSize: Theme.fontSize - 2
                 font.family: Theme.fontFamily

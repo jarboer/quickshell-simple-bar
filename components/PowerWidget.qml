@@ -5,15 +5,24 @@ import Quickshell.Io
 import ".."
 
 DropdownWidget {
+    property int menuItemHeight: 32
+    property int itemCount: 5
+
     id: powerWidget
     popupWidth: 140
-    popupHeight: 165
+    popupHeight: (menuItemHeight * itemCount) + (4 * itemCount) + 24
     stemAlignment: "right"
 
     // Power actions
     Process {
         id: lockProc
-        command: ["loginctl", "lock-session"]
+        command: ["/home/jarboer/.local/bin/omarchy-lock-screen"]
+        // command: ["loginctl", "lock-session"]
+    }
+
+    Process {
+        id: sleepProc
+        command: ["systemctl", "suspend"]
     }
 
     Process {
@@ -65,7 +74,7 @@ DropdownWidget {
 
                     Text {
                         text: "󰌾"
-                        color: Theme.colFg
+                        color: "#5d8b94"
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
                     }
@@ -89,6 +98,45 @@ DropdownWidget {
                 }
             }
 
+            // Sleep
+            Rectangle {
+                width: parent.width
+                height: 32
+                color: sleepMouse.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+                radius: 6
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: 8
+                    spacing: 10
+
+                    Text {
+                        text: "󰤄"
+                        color: "#6971e3"
+                        font.pixelSize: Theme.fontSize
+                        font.family: Theme.fontFamily
+                    }
+                    Text {
+                        text: "Sleep"
+                        color: Theme.colFg
+                        font.pixelSize: Theme.fontSize
+                        font.family: Theme.fontFamily
+                    }
+                }
+
+                MouseArea {
+                    id: sleepMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        powerWidget.dropdownOpen = false
+                        sleepProc.running = true
+                    }
+                }
+            }
+
             // Logout
             Rectangle {
                 width: parent.width
@@ -104,7 +152,7 @@ DropdownWidget {
 
                     Text {
                         text: "󰍃"
-                        color: Theme.colFg
+                        color: '#7cd067'
                         font.pixelSize: Theme.fontSize
                         font.family: Theme.fontFamily
                     }

@@ -156,13 +156,6 @@ DropdownWidget {
             width: 120
             horizontalAlignment: Text.AlignLeft
         }
-
-        Rectangle {
-            width: 1
-            height: 16
-            anchors.verticalCenter: parent.verticalCenter
-            color: Theme.colMuted
-        }
     }
 
     // Popup content
@@ -172,7 +165,7 @@ DropdownWidget {
 
             // Header
             Text {
-                text: wifiWidget.wifiConnected ? "󰤨 " + wifiWidget.wifiSSID : "󰤭 Not Connected"
+                text: wifiWidget.wifiConnected ? wifiWidget.wifiSSID : "Not Connected"
                 color: Theme.colFg
                 font.pixelSize: Theme.fontSize
                 font.family: Theme.fontFamily

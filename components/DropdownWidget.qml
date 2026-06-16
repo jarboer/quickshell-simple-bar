@@ -7,7 +7,7 @@ import ".."
 
 Item {
     id: root
-    Layout.preferredWidth: iconContainer.width
+    Layout.preferredWidth: iconContainer.width + 10
     Layout.preferredHeight: parent.height
     Layout.rightMargin: 8
 
@@ -30,20 +30,32 @@ Item {
         }
     }
 
+    // Placeholder / way to calculate icon size
     Row {
         id: iconContainer
         anchors.centerIn: parent
         height: parent.height
+        // width: 64
     }
 
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            dropdownOpen = !dropdownOpen
-            if (dropdownOpen) {
-                root.opened()
+    // The hover effect
+    Rectangle {
+        color: dropdownOpen ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.2) : dropdownMouseArea.containsMouse ? Qt.rgba(Theme.colFg.r, Theme.colFg.g, Theme.colFg.b, 0.1) : "transparent"
+        radius: 8
+        height: 26
+        width: iconContainer.width + 10
+        anchors.centerIn: parent
+
+        MouseArea {
+            id: dropdownMouseArea
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: {
+                dropdownOpen = !dropdownOpen
+                if (dropdownOpen) {
+                    root.opened()
+                }
             }
         }
     }
@@ -62,7 +74,7 @@ Item {
         anchor.rect.x: {
             var iconCenter = root.x + iconContainer.x + iconContainer.width/2
             if (stemAlignment === "right") {
-                return iconCenter - popupWidth + cardRect.stemWidth/2 + 10
+                return iconCenter - popupWidth + cardRect.stemWidth/2 - 5 // + 10 // Change the centre position (offset)
             } else if (stemAlignment === "left") {
                 return iconCenter - cardRect.stemWidth/2 - 10
             } else {
@@ -79,8 +91,8 @@ Item {
             id: cardRect
             anchors.fill: parent
 
-            property int rawStemWidth: iconContainer.width + 16
-            property int stemWidth: Math.min(rawStemWidth, width - 60)  // ensure room for notch corners
+            property int rawStemWidth: iconContainer.width + 22 // 16 // Adjust the width of top of notch (between the curves) for all types (left, centre, right)
+            property int stemWidth: Math.min(rawStemWidth, width - 60) // ensure room for notch corners
             property int stemHeight: 12
             property int notchRadius: 10
             property int cardRadius: 12
@@ -92,44 +104,78 @@ Item {
                 ctx.reset()
                 ctx.fillStyle = Theme.colBg
 
-                var sw = stemWidth
-                var sh = stemHeight
-                var nr = notchRadius
-                var r = cardRadius
-                var w = width
-                var h = height
-
                 // Calculate stem center based on alignment
                 var cx
                 if (root.stemAlignment === "right") {
-                    cx = w - sw/2 - 10
+                    cx = width - stemWidth/2 + 5 // Change width of top of notch (between the curves)
+
+                    var stemLeft = cx - stemWidth/2
+                    var stemRight = cx + stemWidth/2
+
+                    var gapSize = 2
+
+                    ctx.beginPath()
+                    ctx.moveTo(stemLeft + cardRadius, 0)
+
+                    // 1/4 of a circle
+                    ctx.lineTo(width - cardRadius, 0)
+                    ctx.arcTo(width, 0, width, cardRadius, cardRadius)
+
+                    ctx.lineTo(width, height - cardRadius)
+                    ctx.arcTo(width, height, width - cardRadius, height, cardRadius)
+                    ctx.lineTo(cardRadius, height)
+                    ctx.arcTo(0, height, 0, height - cardRadius, cardRadius)
+                    ctx.lineTo(0, stemHeight + cardRadius)
+                    ctx.arcTo(0, stemHeight, cardRadius, stemHeight, cardRadius)
+
+                    // 1/4 of a circle
+                    ctx.lineTo(stemLeft - notchRadius, stemHeight)
+                    ctx.arcTo(stemLeft, stemHeight, stemLeft, stemHeight - notchRadius, notchRadius)
+                    // Arc triangle
+                    ctx.lineTo(stemLeft - gapSize, cardRadius)
+                    ctx.arcTo(stemLeft - gapSize, 0, stemLeft - gapSize + cardRadius, 0, cardRadius)
+
+                    ctx.closePath()
+                    ctx.fill()
+                    
+                    return
                 } else if (root.stemAlignment === "left") {
-                    cx = sw/2 + 10
+                    cx = stemWidth/2 + 10
                 } else {
-                    cx = w / 2
+                    cx = width / 2
                 }
 
-                var stemLeft = cx - sw/2
-                var stemRight = cx + sw/2
+                var stemLeft = cx - stemWidth/2
+                var stemRight = cx + stemWidth/2
+
+                var gapSize = 2
 
                 ctx.beginPath()
-                ctx.moveTo(stemLeft + r, 0)
-                ctx.lineTo(stemRight - r, 0)
-                ctx.arcTo(stemRight, 0, stemRight, r, r)
-                ctx.lineTo(stemRight, sh - nr)
-                ctx.arcTo(stemRight, sh, stemRight + nr, sh, nr)
-                ctx.lineTo(w - r, sh)
-                ctx.arcTo(w, sh, w, sh + r, r)
-                ctx.lineTo(w, h - r)
-                ctx.arcTo(w, h, w - r, h, r)
-                ctx.lineTo(r, h)
-                ctx.arcTo(0, h, 0, h - r, r)
-                ctx.lineTo(0, sh + r)
-                ctx.arcTo(0, sh, r, sh, r)
-                ctx.lineTo(stemLeft - nr, sh)
-                ctx.arcTo(stemLeft, sh, stemLeft, sh - nr, nr)
-                ctx.lineTo(stemLeft, r)
-                ctx.arcTo(stemLeft, 0, stemLeft + r, 0, r)
+                ctx.moveTo(stemLeft + cardRadius, 0)
+
+                // 1/4 of a circle
+                ctx.lineTo(stemRight - cardRadius, 0)
+                ctx.arcTo(stemRight, 0, stemRight, cardRadius, cardRadius)
+                // Arc triangle
+                ctx.lineTo(stemRight - gapSize, stemHeight - notchRadius)
+                ctx.arcTo(stemRight - gapSize, stemHeight, stemRight - gapSize + notchRadius, stemHeight, notchRadius)
+
+                ctx.lineTo(width - cardRadius, stemHeight)
+                ctx.arcTo(width, stemHeight, width, stemHeight + cardRadius, cardRadius)
+                ctx.lineTo(width, height - cardRadius)
+                ctx.arcTo(width, height, width - cardRadius, height, cardRadius)
+                ctx.lineTo(cardRadius, height)
+                ctx.arcTo(0, height, 0, height - cardRadius, cardRadius)
+                ctx.lineTo(0, stemHeight + cardRadius)
+                ctx.arcTo(0, stemHeight, cardRadius, stemHeight, cardRadius)
+
+                // 1/4 of a circle
+                ctx.lineTo(stemLeft - notchRadius, stemHeight)
+                ctx.arcTo(stemLeft, stemHeight, stemLeft, stemHeight - notchRadius, notchRadius)
+                // Arc triangle
+                ctx.lineTo(stemLeft - gapSize, cardRadius)
+                ctx.arcTo(stemLeft - gapSize, 0, stemLeft - gapSize + cardRadius, 0, cardRadius)
+
                 ctx.closePath()
                 ctx.fill()
             }

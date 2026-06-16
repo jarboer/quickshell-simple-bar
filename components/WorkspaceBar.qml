@@ -11,8 +11,8 @@ RowLayout {
     // Window class to icon mapping
     property var windowIcons: ({
         // Browsers
-        "firefox": "",
-        "org.mozilla.firefox": "",
+        "firefox": "󰈹",
+        "org.mozilla.firefox": "󰈹",
         "librewolf": "",
         "floorp": "",
         "cachy-browser": "",
@@ -20,8 +20,8 @@ RowLayout {
         "zen-browser": "󰰷",
         "zen-alpha": "󰰷",
         "microsoft-edge": "",
-        "chromium": "",
-        "google-chrome": "",
+        "chromium": "", // 󰊯
+        "google-chrome": "",
         "brave-browser": "󰖟",
         "vivaldi": "",
 
@@ -58,7 +58,7 @@ RowLayout {
         "zed": "󰵁",
         "subl": "󰅳",
         "sublime_text": "󰅳",
-        "jetbrains-idea": "",
+        "jetbrains-idea": "",
         "neovide": "",
 
         // Media
@@ -67,6 +67,8 @@ RowLayout {
         "spotify": "",
         "cider": "󰎆",
         "celluloid": "",
+        "WebApp-AppleMusic": "󰝚",
+        "WebApp-YouTube": "󰗃",
 
         // File managers
         "thunar": "󰝰",
@@ -79,19 +81,27 @@ RowLayout {
         "pavucontrol": "󱡫",
         "org.pulseaudio.pavucontrol": "󱡫",
         "nwg-look": "",
-        "steam": "",
         "obs": "",
         "com.obsproject.studio": "",
-        "gimp": "",
-        "virt-manager": "",
+        "gimp": "",
+        "virt-manager": "",
+        "aether": "󰉼",
 
         // Office
-        "libreoffice-writer": "",
-        "libreoffice-calc": "",
+        "libreoffice-writer": "",
+        "libreoffice-calc": "",
         "libreoffice-startcenter": "󰏆",
 
         // Claude Code / AI
         "claude": "󰚩",
+        "WebApp-ChatGPT": "󰚩",
+
+        // Games
+        "steam": "󰓓",
+        "HytaleClient": "󰌪",
+        "Terraria": "󰔱",
+        "Minecraft": "󰍳",
+        "Prism": "",
     })
 
     // Store windows per workspace
@@ -167,15 +177,15 @@ RowLayout {
                         }
                     }
                 }
-                workspaceBar.ws1Icons = wsIcons[1] ? wsIcons[1].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws2Icons = wsIcons[2] ? wsIcons[2].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws3Icons = wsIcons[3] ? wsIcons[3].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws4Icons = wsIcons[4] ? wsIcons[4].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws5Icons = wsIcons[5] ? wsIcons[5].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws6Icons = wsIcons[6] ? wsIcons[6].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws7Icons = wsIcons[7] ? wsIcons[7].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws8Icons = wsIcons[8] ? wsIcons[8].icons.slice(0, 3).join(" ") : ""
-                workspaceBar.ws9Icons = wsIcons[9] ? wsIcons[9].icons.slice(0, 3).join(" ") : ""
+                workspaceBar.ws1Icons = wsIcons[1] ? wsIcons[1].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws2Icons = wsIcons[2] ? wsIcons[2].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws3Icons = wsIcons[3] ? wsIcons[3].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws4Icons = wsIcons[4] ? wsIcons[4].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws5Icons = wsIcons[5] ? wsIcons[5].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws6Icons = wsIcons[6] ? wsIcons[6].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws7Icons = wsIcons[7] ? wsIcons[7].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws8Icons = wsIcons[8] ? wsIcons[8].icons.slice(0, 3).join("   ") : ""
+                workspaceBar.ws9Icons = wsIcons[9] ? wsIcons[9].icons.slice(0, 3).join("   ") : ""
             }
         }
         Component.onCompleted: running = true
@@ -272,7 +282,7 @@ RowLayout {
                 Text {
                     text: wsRect.windowIconsStr
                     color: wsRect.isActive ? Theme.colWorkspaceActive : Theme.colFg
-                    font.pixelSize: Theme.fontSize - 1
+                    font.pixelSize: Theme.fontSize + 4 // - 1
                     font.family: Theme.fontFamily
                     visible: wsRect.windowIconsStr.length > 0
                     anchors.verticalCenter: parent.verticalCenter

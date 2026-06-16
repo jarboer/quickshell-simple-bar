@@ -139,6 +139,7 @@ DropdownWidget {
         font.pixelSize: Theme.fontSize + 4
         font.family: Theme.fontFamily
         font.bold: true
+        // anchors.centerIn: parent
     }
 
     // Popup content
@@ -152,7 +153,8 @@ DropdownWidget {
                 spacing: 8
 
                 Text {
-                    text: btWidget.btPowered ? (btWidget.btConnected ? "󰂱 " + btWidget.btConnectedDevice : "󰂯 Bluetooth") : "󰂲 Bluetooth Off"
+                    // text: btWidget.btPowered ? (btWidget.btConnected ? "󰂱 " + btWidget.btConnectedDevice : "󰂯 Bluetooth") : "󰂲 Bluetooth Off"
+                    text: btWidget.btPowered ? (btWidget.btConnected ? btWidget.btConnectedDevice : "Bluetooth") : "Bluetooth Off"
                     color: Theme.colFg
                     font.pixelSize: Theme.fontSize
                     font.family: Theme.fontFamily

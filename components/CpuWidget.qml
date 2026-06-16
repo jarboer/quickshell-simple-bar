@@ -3,18 +3,56 @@ import QtQuick.Layouts
 import Quickshell.Io
 import ".."
 
-Text {
+Item {
     id: cpuWidget
+    Layout.preferredWidth: 58
 
-    property int cpuUsage: 0
+    property string cpuUsage: " 0"
+    property string cpuTemp: " 0"
     property var lastCpuIdle: 0
     property var lastCpuTotal: 0
 
-    text: cpuUsage + "% 󰍛"
-    color: Theme.colCpu
-    font.pixelSize: Theme.fontSize
-    font.family: Theme.fontFamily
-    font.bold: true
+    Row {
+        spacing: 10
+        anchors.verticalCenter: parent.verticalCenter
+
+        Text {
+            text: "󰍛"
+            color: Theme.colCpu
+            font.pixelSize: Theme.fontSize + 4
+            font.family: Theme.fontFamily
+            font.bold: true
+            horizontalAlignment: Text.AlignRight
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        Column {
+            spacing: 0
+            anchors.verticalCenter: parent.verticalCenter
+
+            // CPU Usage
+            Text {
+                text: cpuWidget.cpuUsage + "%"
+                color: Theme.colCpu
+                font.pixelSize: Theme.fontSize / 1.5
+                font.family: Theme.fontFamily
+                font.bold: true
+                width: 30
+                horizontalAlignment: Text.AlignRight
+            }
+
+            // CPU Temp
+            Text {
+                text: cpuWidget.cpuTemp + "°C"
+                color: Theme.colCpu
+                font.pixelSize: Theme.fontSize / 1.5
+                font.family: Theme.fontFamily
+                font.bold: true
+                width: 30
+                horizontalAlignment: Text.AlignRight
+            }
+        }
+    }
 
     Process {
         id: cpuProc
@@ -38,11 +76,27 @@ Text {
                     var totalDiff = total - cpuWidget.lastCpuTotal
                     var idleDiff = idleTime - cpuWidget.lastCpuIdle
                     if (totalDiff > 0) {
-                        cpuWidget.cpuUsage = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
+                        var cpuVal = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
+                        cpuWidget.cpuUsage = String(cpuVal).padStart(3, " ")
                     }
                 }
                 cpuWidget.lastCpuTotal = total
                 cpuWidget.lastCpuIdle = idleTime
+            }
+        }
+        Component.onCompleted: running = true
+    }
+
+    Process {
+        id: tempProc
+        command: ["sh", "-c", "cat /sys/class/thermal/thermal_zone0/temp"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (!data) return
+                var raw = parseInt(data.trim())
+                if (!isNaN(raw)) {
+                    cpuWidget.cpuTemp = String(Math.round(raw / 1000)).padStart(2, " ")
+                }
             }
         }
         Component.onCompleted: running = true
