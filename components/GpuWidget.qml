@@ -5,7 +5,7 @@ import ".."
 
 Item {
     id: gpuWidget
-    Layout.preferredWidth: 166
+    Layout.preferredWidth: 172
 
     property string gpuUsage: " 0"
     property string gpuTemp:  " 0"
@@ -18,21 +18,45 @@ Item {
 
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            text: " 󰍹 " + gpuWidget.gpuUsage + "%"
+            text: "󰍹"
             color: Theme.colGpu
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
-            width: 56
+            horizontalAlignment: Text.AlignRight
         }
+
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            text: " " + gpuWidget.gpuMem + "%"
+            text: gpuWidget.gpuUsage + "%"
             color: Theme.colGpu
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
-            width: 56
+            width: 36
+            horizontalAlignment: Text.AlignRight
+        }
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: ""
+            color: Theme.colGpu
+            font.pixelSize: Theme.fontSize
+            font.family: Theme.fontFamily
+            font.bold: true
+            horizontalAlignment: Text.AlignRight
+        }
+
+
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: gpuWidget.gpuMem + "%"
+            color: Theme.colGpu
+            font.pixelSize: Theme.fontSize
+            font.family: Theme.fontFamily
+            font.bold: true
+            width: 36
+            horizontalAlignment: Text.AlignRight
         }
         Text {
             anchors.verticalCenter: parent.verticalCenter
@@ -41,7 +65,8 @@ Item {
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
-            width: 56
+            width: 36
+            horizontalAlignment: Text.AlignRight
         }
     }
 
@@ -55,9 +80,9 @@ Item {
                 var gpuUsage = parts[0]
                 var memPct = parts[3] > 0 ? Math.round(100 * parts[2] / parts[3]) : 0
 
-                gpuWidget.gpuUsage = gpuUsage > 10 ? String(gpuUsage).padStart(4, " ") : String(gpuUsage).padStart(5, " ")
+                gpuWidget.gpuUsage = String(gpuUsage).padStart(3, " ")
                 gpuWidget.gpuTemp  = String(parts[1]).padStart(4, " ")
-                gpuWidget.gpuMem   = memPct > 10 ? String(memPct).padStart(4, " ") : String(memPct).padStart(5, " ")
+                gpuWidget.gpuMem   = String(memPct).padStart(3, " ")
             }
         }
         Component.onCompleted: running = true

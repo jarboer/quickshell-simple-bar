@@ -5,7 +5,7 @@ import ".."
 
 Item {
     id: cpuWidget
-    Layout.preferredWidth: 92
+    Layout.preferredWidth: 100
 
     property string cpuUsage: " 0"
     property string cpuTemp: " 0"
@@ -16,15 +16,26 @@ Item {
         spacing: 10
         anchors.verticalCenter: parent.verticalCenter
 
-        // CPU Usage
         Text {
             anchors.verticalCenter: parent.verticalCenter
-            text: "󰍛 " + cpuWidget.cpuUsage + "%"
+            text: "󰍛"
             color: Theme.colCpu
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
-            width: 56
+            horizontalAlignment: Text.AlignRight
+        }
+
+        // CPU Usage
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: cpuWidget.cpuUsage + "%"
+            color: Theme.colCpu
+            font.pixelSize: Theme.fontSize
+            font.family: Theme.fontFamily
+            font.bold: true
+            width: 36
+            horizontalAlignment: Text.AlignRight
         }
 
         // CPU Temp
@@ -35,7 +46,8 @@ Item {
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
-            width: 56
+            width: 36
+            horizontalAlignment: Text.AlignRight
         }
     }
 
@@ -62,7 +74,7 @@ Item {
                     var idleDiff = idleTime - cpuWidget.lastCpuIdle
                     if (totalDiff > 0) {
                         var cpuVal = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
-                        cpuWidget.cpuUsage = cpuVal > 10 ? String(cpuVal).padStart(4, " ") : String(cpuVal).padStart(5, " ")
+                        cpuWidget.cpuUsage = String(cpuVal).padStart(3, " ")
                     }
                 }
                 cpuWidget.lastCpuTotal = total

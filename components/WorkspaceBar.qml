@@ -100,6 +100,8 @@ RowLayout {
         "steam": "󰓓",
         "HytaleClient": "󰌪",
         "Terraria": "󰔱",
+        "Minecraft": "󰍳",
+        "Prism": "",
     })
 
     // Store windows per workspace
