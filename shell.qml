@@ -39,7 +39,7 @@ ShellRoot {
                 right: true
             }
 
-            implicitHeight: 34
+            implicitHeight: 38
             color: "transparent" // Theme.colBg
 
             margins {

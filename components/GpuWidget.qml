@@ -5,7 +5,7 @@ import ".."
 
 Item {
     id: gpuWidget
-    Layout.preferredWidth: 172
+    Layout.preferredWidth: 122
 
     property string gpuUsage: " 0"
     property string gpuTemp:  " 0"
@@ -17,39 +17,52 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
 
         Text {
-            anchors.verticalCenter: parent.verticalCenter
             text: "󰍹"
             color: Theme.colGpu
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
             horizontalAlignment: Text.AlignRight
+            anchors.verticalCenter: parent.verticalCenter
         }
 
-        Text {
+        Column {
+            spacing: 0
             anchors.verticalCenter: parent.verticalCenter
-            text: gpuWidget.gpuUsage + "%"
-            color: Theme.colGpu
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
-            width: 36
-            horizontalAlignment: Text.AlignRight
+
+            Text {
+                text: gpuWidget.gpuUsage + "%"
+                color: Theme.colGpu
+                font.pixelSize: Theme.fontSize / 1.5
+                font.family: Theme.fontFamily
+                font.bold: true
+                width: 30
+                horizontalAlignment: Text.AlignRight
+            }
+
+            Text {
+                text: gpuWidget.gpuTemp + "°C"
+                color: Theme.colGpu
+                font.pixelSize: Theme.fontSize / 1.5
+                font.family: Theme.fontFamily
+                font.bold: true
+                width: 30
+                horizontalAlignment: Text.AlignRight
+            }
         }
 
+
         Text {
-            anchors.verticalCenter: parent.verticalCenter
             text: ""
             color: Theme.colGpu
             font.pixelSize: Theme.fontSize
             font.family: Theme.fontFamily
             font.bold: true
             horizontalAlignment: Text.AlignRight
+            anchors.verticalCenter: parent.verticalCenter
         }
 
-
         Text {
-            anchors.verticalCenter: parent.verticalCenter
             text: gpuWidget.gpuMem + "%"
             color: Theme.colGpu
             font.pixelSize: Theme.fontSize
@@ -57,17 +70,9 @@ Item {
             font.bold: true
             width: 36
             horizontalAlignment: Text.AlignRight
-        }
-        Text {
             anchors.verticalCenter: parent.verticalCenter
-            text: gpuWidget.gpuTemp + "°C"
-            color: Theme.colGpu
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
-            width: 36
-            horizontalAlignment: Text.AlignRight
         }
+        
     }
 
     Process {

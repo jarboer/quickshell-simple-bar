@@ -5,7 +5,7 @@ import ".."
 
 Item {
     id: cpuWidget
-    Layout.preferredWidth: 100
+    Layout.preferredWidth: 58
 
     property string cpuUsage: " 0"
     property string cpuTemp: " 0"
@@ -17,37 +17,40 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
 
         Text {
-            anchors.verticalCenter: parent.verticalCenter
             text: "󰍛"
             color: Theme.colCpu
-            font.pixelSize: Theme.fontSize
+            font.pixelSize: Theme.fontSize + 4
             font.family: Theme.fontFamily
             font.bold: true
             horizontalAlignment: Text.AlignRight
+            anchors.verticalCenter: parent.verticalCenter
         }
 
-        // CPU Usage
-        Text {
+        Column {
+            spacing: 0
             anchors.verticalCenter: parent.verticalCenter
-            text: cpuWidget.cpuUsage + "%"
-            color: Theme.colCpu
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
-            width: 36
-            horizontalAlignment: Text.AlignRight
-        }
 
-        // CPU Temp
-        Text {
-            anchors.verticalCenter: parent.verticalCenter
-            text: cpuWidget.cpuTemp + "°C"
-            color: Theme.colCpu
-            font.pixelSize: Theme.fontSize
-            font.family: Theme.fontFamily
-            font.bold: true
-            width: 36
-            horizontalAlignment: Text.AlignRight
+            // CPU Usage
+            Text {
+                text: cpuWidget.cpuUsage + "%"
+                color: Theme.colCpu
+                font.pixelSize: Theme.fontSize / 1.5
+                font.family: Theme.fontFamily
+                font.bold: true
+                width: 30
+                horizontalAlignment: Text.AlignRight
+            }
+
+            // CPU Temp
+            Text {
+                text: cpuWidget.cpuTemp + "°C"
+                color: Theme.colCpu
+                font.pixelSize: Theme.fontSize / 1.5
+                font.family: Theme.fontFamily
+                font.bold: true
+                width: 30
+                horizontalAlignment: Text.AlignRight
+            }
         }
     }
 
