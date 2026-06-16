@@ -7,7 +7,7 @@ A modern, feature-rich status bar for Hyprland built with [Quickshell](https://q
 
 ## Preview
 
-![Bar Preview](screenshots/bar-preview.png)
+![Bar Preview](screenshots/bar-preview-new.png)
 
 ## Features
 
