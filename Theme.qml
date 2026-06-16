@@ -9,7 +9,8 @@ QtObject {
     readonly property color colMuted: "#606060"        // Muted/separator color
     readonly property color colClock: '#9ed5f8'        // Blue for clock
     readonly property color colCpu: "#7287fd"          // Blue for CPU
-    readonly property color colMem: "#40a02b"          // Green for memory
+    readonly property color colGpu: '#f6af44'          // Blue for GPU
+    readonly property color colMem: '#2ba073'          // Green for memory
     readonly property color colDisk: "#8b4513"         // Brown for disk
     readonly property color colVol: "#40a02b"          // Green for volume
     readonly property color colNetwork: "#dd7878"      // Pink for network

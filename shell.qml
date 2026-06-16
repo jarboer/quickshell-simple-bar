@@ -113,6 +113,12 @@ ShellRoot {
 
                 Separator {}
 
+                GpuWidget {
+                    Layout.rightMargin: 8
+                }
+
+                Separator {}
+
                 //DiskWidget {
                 //    Layout.rightMargin: 8
                 //}
@@ -138,6 +144,8 @@ ShellRoot {
                 EthernetWidget {
                     barWindow: barWindow
                 }
+
+                Separator {}
 
                 // Bluetooth indicator
                 BluetoothWidget {

@@ -12,7 +12,7 @@ Text {
 
     property string memUsage: " 0"
 
-    text: "󰾆  " + memUsage + "%"
+    text: "  " + memUsage + "%"
     color: Theme.colMem
     font.pixelSize: Theme.fontSize
     font.family: Theme.fontFamily

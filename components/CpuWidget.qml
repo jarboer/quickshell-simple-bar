@@ -3,22 +3,41 @@ import QtQuick.Layouts
 import Quickshell.Io
 import ".."
 
-Text {
+Item {
     id: cpuWidget
-
-    Layout.preferredWidth: 56
-    Layout.alignment: Qt.AlignRight
-    horizontalAlignment: Text.AlignRight
+    Layout.preferredWidth: 92
 
     property string cpuUsage: " 0"
+    property string cpuTemp: " 0"
     property var lastCpuIdle: 0
     property var lastCpuTotal: 0
 
-    text: "󰍛  " + cpuUsage + "%"
-    color: Theme.colCpu
-    font.pixelSize: Theme.fontSize
-    font.family: Theme.fontFamily
-    font.bold: true
+    Row {
+        spacing: 10
+        anchors.verticalCenter: parent.verticalCenter
+
+        // CPU Usage
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: "󰍛 " + cpuWidget.cpuUsage + "%"
+            color: Theme.colCpu
+            font.pixelSize: Theme.fontSize
+            font.family: Theme.fontFamily
+            font.bold: true
+            width: 56
+        }
+
+        // CPU Temp
+        Text {
+            anchors.verticalCenter: parent.verticalCenter
+            text: cpuWidget.cpuTemp + "°C"
+            color: Theme.colCpu
+            font.pixelSize: Theme.fontSize
+            font.family: Theme.fontFamily
+            font.bold: true
+            width: 56
+        }
+    }
 
     Process {
         id: cpuProc
@@ -43,11 +62,26 @@ Text {
                     var idleDiff = idleTime - cpuWidget.lastCpuIdle
                     if (totalDiff > 0) {
                         var cpuVal = Math.round(100 * (totalDiff - idleDiff) / totalDiff)
-                        cpuWidget.cpuUsage = String(cpuVal).padStart(3, " ")
+                        cpuWidget.cpuUsage = cpuVal > 10 ? String(cpuVal).padStart(4, " ") : String(cpuVal).padStart(5, " ")
                     }
                 }
                 cpuWidget.lastCpuTotal = total
                 cpuWidget.lastCpuIdle = idleTime
+            }
+        }
+        Component.onCompleted: running = true
+    }
+
+    Process {
+        id: tempProc
+        command: ["sh", "-c", "cat /sys/class/thermal/thermal_zone0/temp"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (!data) return
+                var raw = parseInt(data.trim())
+                if (!isNaN(raw)) {
+                    cpuWidget.cpuTemp = String(Math.round(raw / 1000)).padStart(2, " ")
+                }
             }
         }
         Component.onCompleted: running = true
